@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from bson import ObjectId
 import os
-import jwt 
+from jwt import decode, ExpiredSignatureError, InvalidTokenError
 
 app = Flask(__name__)
 CORS(app)
@@ -22,18 +22,22 @@ users_collection = db["Users"]
 @app.route('/process-orders', methods=['POST'])
 def process_orders():
     try:
+        print("Request Headers:", request.headers)
+
+        print("Request Data:", request.get_json())
+
         auth_header = request.headers.get("Authorization")
         if not auth_header or not auth_header.startswith("Bearer "):
             return jsonify({"error": "Unauthorized"}), 401
 
         token = auth_header.split(" ")[1]
         try:
-            decoded = jwt.decode(token, jwt_secret, algorithms=["HS256"])
+            decoded = decode(token, jwt_secret, algorithms=["HS256"])
             logged_in_user_id = decoded.get("id")
             logged_in_user_id = ObjectId(logged_in_user_id)
-        except jwt.ExpiredSignatureError:
+        except ExpiredSignatureError:
             return jsonify({"error": "Token has expired"}), 401
-        except jwt.InvalidTokenError:
+        except InvalidTokenError:
             return jsonify({"error": "Invalid token"}), 401
 
         num_clusters = users_collection.count_documents({
@@ -46,6 +50,9 @@ def process_orders():
 
         if not data:
             return jsonify({"error": "Received empty data"}), 400
+
+        print("Parsed Order IDs:", list(data.keys()))
+        print("Parsed Locations:", list(data.values()))
 
         order_ids = list(data.keys())
         locations = list(data.values())
@@ -75,6 +82,7 @@ def process_orders():
         return jsonify(result_map)
 
     except Exception as e:
+        print("Error:", str(e))
         return jsonify({"error": str(e)})
 
 if __name__ == '__main__':
