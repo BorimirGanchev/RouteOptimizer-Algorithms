@@ -16,7 +16,7 @@ load_dotenv()
 mongo_uri = os.getenv("MONGODB_URI")
 jwt_secret = os.getenv("JWT_SECRET")
 client = MongoClient(mongo_uri)
-db = client.get_database()
+db = client["Route-Optimizer"]
 users_collection = db["Users"] 
 
 @app.route('/process-orders', methods=['POST'])
