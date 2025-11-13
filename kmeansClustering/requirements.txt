@@ -1,3 +1,12 @@
+flask
+flask-cors
+numpy
+scikit-learn
+scipy
+pymongo
+python-dotenv
+PyJWT
+gunicorn
 blinker==1.9.0
 certifi==2025.1.31
 cffi==1.17.1
