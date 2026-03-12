@@ -18,7 +18,7 @@ This repository contains algorithm implementations that can be used as building 
 - Add more algorithms (e.g., nearest-neighbor heuristic, 2-opt, simulated annealing, genetic algorithm, Dijkstra/A*, OR-Tools baselines).
 - Add datasets + reproducible examples (input format + output visualization).
 - Add benchmarking (runtime and solution quality comparisons).
-- Add unit tests and CI.
+- Add unit tests.
 
 ## Author
 BorimirGanchev
